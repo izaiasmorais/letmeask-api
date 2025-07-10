@@ -1,0 +1,7 @@
+table rooms {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  name text [not null]
+  descritpion text
+  createdAt timestamp [not null, default: `now()`]
+  updatedAt timestamp
+}
