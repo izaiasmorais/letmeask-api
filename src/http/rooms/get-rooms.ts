@@ -1,7 +1,8 @@
+import { count, eq } from "drizzle-orm";
 import type { FastifyInstance } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { db } from "../../db/connection.ts";
-import { schema } from "../../db/schema/index.ts";
+import { schema } from "../../db/schemas/index.ts";
 import { errorSchema, successSchema } from "../../schemas/http.ts";
 import { roomsSchema } from "../../schemas/rooms.ts";
 
@@ -25,8 +26,16 @@ export function getRooms(app: FastifyInstance) {
 				.select({
 					id: schema.rooms.id,
 					name: schema.rooms.name,
+					questionsCount: count(schema.questions.id),
+					createdAt: schema.rooms.createdAt,
+					updatedAt: schema.rooms.updatedAt,
 				})
 				.from(schema.rooms)
+				.leftJoin(
+					schema.questions,
+					eq(schema.questions.roomId, schema.rooms.id)
+				)
+				.groupBy(schema.rooms.id, schema.rooms.name)
 				.orderBy(schema.rooms.createdAt);
 
 			return reply.send({

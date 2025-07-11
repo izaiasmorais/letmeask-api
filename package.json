@@ -11,7 +11,8 @@
 		"migrate": "npx drizzle-kit migrate",
 		"studio": "npx drizzle-kit studio --port=5555",
 		"seed": "node --env-file .env --experimental-strip-types --no-warnings src/db/seed.ts",
-		"erd": "drizzle-erd --in ./src/db/schema/index.ts --out erd.svg"
+		"erd": "drizzle-erd --in ./src/db/schema/index.ts --out erd.svg",
+		"health": "pnpm tsc --noEmit"
 	},
 	"keywords": [],
 	"author": "",

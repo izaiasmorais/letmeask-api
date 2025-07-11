@@ -8,6 +8,20 @@
       "when": 1752161815288,
       "tag": "0000_last_risque",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1752257265899,
+      "tag": "0001_shiny_boomer",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1752258575826,
+      "tag": "0002_perfect_mole_man",
+      "breakpoints": true
     }
   ]
 }
