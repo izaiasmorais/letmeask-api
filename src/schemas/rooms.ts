@@ -27,9 +27,17 @@ export const getRoomQuestionsParamsSchema = z.object({
 	roomId: z.string(),
 });
 
-export const questionSchema = z.object({
+export const getRoomByIdResponseSchema = z.object({
 	id: z.string(),
-	question: z.string(),
-	answer: z.string().nullable(),
+	name: z.string(),
+	questionsCount: z.number(),
 	createdAt: z.date(),
+	questions: z.array(
+		z.object({
+			id: z.string(),
+			question: z.string(),
+			answer: z.string().nullable(),
+			createdAt: z.date(),
+		})
+	),
 });
