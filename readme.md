@@ -98,13 +98,5 @@ pnpm dev
 Acesse a documentação interativa (Swagger):
 
 ```
-http://localhost:3333/json
-```
-
-## Executando os Testes
-
-(Adicione instruções aqui caso haja testes configurados, por exemplo:)
-
-```bash
-pnpm test
+http://localhost:3333/
 ```
