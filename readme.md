@@ -1,5 +1,7 @@
 # Letmeask API
 
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/7da5ddc0-f28d-4afd-8ed5-7e16e7a4dc67" />
+
 ## Introdução
 
 Uma API autodocumentável construída com Fastify para a plataforma Letmeask, permitindo a criação e gerenciamento de salas, perguntas e áudios.
