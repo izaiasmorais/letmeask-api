@@ -41,7 +41,7 @@ export function createQuestion(app: FastifyInstance) {
 			if (!roomExists.length) {
 				return reply.code(404).send({
 					success: false,
-					errors: ["Room not found"],
+					errors: ["A sala não existe"],
 					data: null,
 				});
 			}
@@ -60,7 +60,7 @@ export function createQuestion(app: FastifyInstance) {
 				.where(
 					and(
 						eq(schema.audioChunks.roomId, roomId),
-						sql`1 - (${schema.audioChunks.embeddings} <=> ${embeddingsAsString}::vector) > 0.7`
+						sql`1 - (${schema.audioChunks.embeddings} <=> ${embeddingsAsString}::vector) > 0.5`
 					)
 				)
 				.orderBy(

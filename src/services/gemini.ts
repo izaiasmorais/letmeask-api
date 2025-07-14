@@ -5,11 +5,13 @@ export const gemini = new GoogleGenAI({
 	apiKey: env.GEMINI_API_KEY,
 });
 
-const model = "gemini-2.5-flash";
+const highQualityModel = "gemini-2.5-pro";
+// const fastModel = "gemini-2.5-flash";
+const embeddingModel = "text-embedding-004";
 
 export async function transcribeAudio(audioAsBase64: string, mimeType: string) {
 	const response = await gemini.models.generateContent({
-		model,
+		model: highQualityModel,
 		contents: [
 			{
 				text: "Transcreva o áudio para português do Brasil. Seja preciso e natural na transcrição. Mentenha a pontuação adequada e divida o texto em parágrafos quando necessário.",
@@ -32,7 +34,7 @@ export async function transcribeAudio(audioAsBase64: string, mimeType: string) {
 
 export async function generateEmbeddings(text: string) {
 	const response = await gemini.models.embedContent({
-		model: "text-embedding-004",
+		model: embeddingModel,
 		contents: [{ text }],
 		config: {
 			taskType: "RETRIEVAL_DOCUMENT",
@@ -52,7 +54,7 @@ export async function generateAnswer(
 ) {
 	const context = transcriptions.join("\n\n");
 
-	const prompt = `
+	const prompt =`
 		Com base no texto fornecido abaixo, responda a pergunta de forma clara e precisa em português do Brasil.
 
 		CONTEXTO: ${context}
@@ -74,7 +76,7 @@ export async function generateAnswer(
 	`;
 
 	const response = await gemini.models.generateContent({
-		model,
+		model: highQualityModel,
 		contents: [
 			{
 				text: prompt,

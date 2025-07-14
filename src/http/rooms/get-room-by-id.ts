@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import type { FastifyInstance } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { db } from "../../db/connection.ts";
@@ -55,7 +55,7 @@ export function getRoomById(app: FastifyInstance) {
 				})
 				.from(schema.questions)
 				.where(eq(schema.questions.roomId, roomId))
-				.orderBy(schema.questions.createdAt);
+				.orderBy(desc(schema.questions.createdAt));
 
 			const data = {
 				id: room.id,
