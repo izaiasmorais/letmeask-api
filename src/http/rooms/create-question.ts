@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import type { FastifyInstance } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { db } from "../../db/connection.ts";
@@ -9,6 +9,7 @@ import {
 	createQuestionParamsSchema,
 	createQuestionResponseSchema,
 } from "../../schemas/questions.ts";
+import { generateAnswer, generateEmbeddings } from "../../services/gemini.ts";
 
 export function createQuestion(app: FastifyInstance) {
 	app.withTypeProvider<ZodTypeProvider>().post(
@@ -45,11 +46,42 @@ export function createQuestion(app: FastifyInstance) {
 				});
 			}
 
+			const embeddings = await generateEmbeddings(question);
+
+			const embeddingsAsString = `[${embeddings.join(",")}]`;
+
+			const chunks = await db
+				.select({
+					id: schema.audioChunks.id,
+					transcription: schema.audioChunks.transcription,
+					similarity: sql<number>`1 - (${schema.audioChunks.embeddings} <=> ${embeddingsAsString}::vector)`,
+				})
+				.from(schema.audioChunks)
+				.where(
+					and(
+						eq(schema.audioChunks.roomId, roomId),
+						sql`1 - (${schema.audioChunks.embeddings} <=> ${embeddingsAsString}::vector) > 0.7`
+					)
+				)
+				.orderBy(
+					sql`1 - (${schema.audioChunks.embeddings} <=> ${embeddingsAsString}::vector)`
+				)
+				.limit(3);
+
+			let answer: string | null = null;
+
+			if (chunks.length > 0) {
+				const transcriptions = chunks.map((chunk) => chunk.transcription);
+
+				answer = await generateAnswer(question, transcriptions);
+			}
+
 			const [newQuestion] = await db
 				.insert(schema.questions)
 				.values({
 					roomId,
 					question,
+					answer,
 				})
 				.returning();
 

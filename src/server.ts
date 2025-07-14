@@ -9,13 +9,16 @@ import {
 	type ZodTypeProvider,
 } from "fastify-type-provider-zod";
 import { env } from "./env.ts";
+import { audiosRoutes } from "./http/audios/audios.routes.ts";
 import { roomsRoutes } from "./http/rooms/rooms.routes.ts";
+import fastifyMultipart from "@fastify/multipart";
 
 const app = fastify().withTypeProvider<ZodTypeProvider>();
 
 app.register(fastifyCors, {
 	origin: "http://localhost:5173",
 });
+app.register(fastifyMultipart);
 app.setSerializerCompiler(serializerCompiler);
 app.setValidatorCompiler(validatorCompiler);
 app.register(fastifySwagger, {
@@ -43,5 +46,6 @@ app.register(fastifySwaggerUI, {
 
 // Routes
 app.register(roomsRoutes);
+app.register(audiosRoutes);
 
 app.listen({ port: env.PORT });

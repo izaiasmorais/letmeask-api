@@ -12,6 +12,7 @@ export const createQuestionResponseSchema = z.object({
 	id: z.string(),
 	roomId: z.string(),
 	question: z.string(),
+	answer: z.string().nullable(),
 	createdAt: z.date(),
 	updatedAt: z.date(),
 });
